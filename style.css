@@ -1,0 +1,84 @@
+/* Mengimpor Font Inter untuk tampilan yang profesional dan rapi */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Variabel warna untuk menjaga konsistensi tema terang */
+  --bg-color: #fcfcfc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #f1f5f9;
+  --accent-color: #2563eb;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Kustomisasi Scrollbar untuk history ulasan agar terlihat minimalis */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #cbd5e1;
+}
+
+/* Transisi dan bayangan halus untuk efek melayang pada kartu proyek */
+.project-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+}
+
+/* Efek fokus pada elemen form (input/textarea) agar UI terasa responsif */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Efek tombol pada saat ditekan (klik) */
+button:active {
+  transform: scale(0.98);
+  transition: transform 0.1s;
+}
+
+/* Animasi untuk modal agar muncul perlahan (fade in) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#review-modal > div {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Mencegah interaksi tidak sengaja pada elemen teks statis */
+.no-select {
+  user-select: none;
+}
