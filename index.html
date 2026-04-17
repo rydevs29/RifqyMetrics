@@ -1,73 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RifqyMetrics - Project Portfolio & Ratings</title>
+    <title>RifqyMetrics - Project & Quality Score</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { darkMode: 'media' } // Auto ikut sistem HP/PC
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fcfcfc; }
-        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
-        .project-card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
-    </style>
-</head>
-<body class="text-slate-900">
 
-    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tight text-blue-600">RifqyMetrics</h1>
-            <a href="admin.html" class="text-sm font-medium text-slate-500 hover:text-blue-600 transition">Admin Access</a>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-center md:justify-start">
+            <h1 class="text-2xl font-extrabold tracking-tight text-blue-600 dark:text-blue-500">RifqyMetrics</h1>
         </div>
     </nav>
 
-    <header class="max-w-6xl mx-auto px-6 py-16 text-center lg:text-left lg:py-24">
+    <header class="max-w-6xl mx-auto px-6 py-12 md:py-20 text-center">
         <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-            Eksplorasi Proyek & <span class="text-blue-600">Metrik Kualitas.</span>
+            Eksplorasi Proyek & <span class="text-blue-600 dark:text-blue-500">Metrik Kualitas.</span>
         </h2>
-        <p class="text-lg text-slate-500 max-w-2xl">
-            Daftar repository terpilih dengan sistem penilaian transparan dari komunitas.
+        <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-12">
+            Transparansi penuh. Lihat apa yang saya bangun dan bagaimana komunitas menilainya.
         </p>
+
+        <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
+            <div>
+                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Total Proyek</p>
+                <p id="stat-projects" class="text-3xl font-extrabold text-slate-800 dark:text-slate-100">0</p>
+            </div>
+            <div class="border-l border-r border-slate-100 dark:border-slate-700">
+                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Avg Rating</p>
+                <p id="stat-rating" class="text-3xl font-extrabold text-amber-500">0.0 <span class="text-sm">⭐</span></p>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Total Ulasan</p>
+                <p id="stat-reviews" class="text-3xl font-extrabold text-blue-600 dark:text-blue-400">0</p>
+            </div>
+        </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-6 pb-24">
         <div id="project-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="col-span-full text-center py-20 text-slate-400">
-                Memuat data proyek...
+            <div class="col-span-full text-center py-20 text-slate-400 dark:text-slate-500 font-medium animate-pulse">
+                Menarik data dari server...
             </div>
         </div>
     </main>
 
-    <div id="review-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8">
-            <h3 id="modal-project-name" class="text-2xl font-bold mb-2">Kasih Rating</h3>
-            <p class="text-sm text-slate-500 mb-6">Berikan masukan kamu untuk proyek ini.</p>
+    <div id="review-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-slate-900/40 dark:bg-slate-900/80 backdrop-blur-sm transition-opacity">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-3xl shadow-2xl p-8 border border-slate-100 dark:border-slate-700 relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-400 hover:text-red-500 transition">✕</button>
+            <h3 id="modal-project-name" class="text-2xl font-bold mb-2 text-slate-800 dark:text-slate-100">Kasih Rating</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Berikan masukan kamu (Maks. 8 proyek).</p>
             
             <form id="review-form" class="space-y-4">
                 <input type="hidden" id="modal-project-id">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Kamu</label>
-                    <input type="text" id="reviewer-name" required class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Contoh: RifqyDev">
+                    <input type="text" id="reviewer-name" required class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition dark:text-white" placeholder="Nama Kamu">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Rating</label>
-                    <select id="reviewer-rating" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        <option value="5">⭐⭐⭐⭐⭐ (Sangat Bagus)</option>
-                        <option value="4">⭐⭐⭐⭐ (Bagus)</option>
-                        <option value="3">⭐⭐⭐ (Cukup)</option>
-                        <option value="2">⭐⭐ (Perlu Perbaikan)</option>
-                        <option value="1">⭐ (Buruk)</option>
+                    <select id="reviewer-rating" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition dark:text-white">
+                        <option value="5">⭐⭐⭐⭐⭐ (Sempurna!)</option>
+                        <option value="4">⭐⭐⭐⭐ (Keren)</option>
+                        <option value="3">⭐⭐⭐ (Bagus)</option>
+                        <option value="2">⭐⭐ (Ada Bug)</option>
+                        <option value="1">⭐ (Perlu Perbaikan)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Komentar</label>
-                    <textarea id="reviewer-comment" required rows="3" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Apa pendapatmu?"></textarea>
+                    <textarea id="reviewer-comment" required rows="2" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition dark:text-white" placeholder="Apa pendapatmu?"></textarea>
                 </div>
-                <div class="flex gap-3 pt-2">
-                    <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 text-slate-600 font-medium hover:bg-slate-100 rounded-lg transition">Batal</button>
-                    <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white font-medium hover:bg-blue-700 rounded-lg shadow-lg shadow-blue-200 transition">Kirim Rating</button>
-                </div>
+                
+                <div class="cf-turnstile mt-2 flex justify-center" data-sitekey="1x00000000000000000000AA" data-callback="onTurnstileSuccess"></div>
+
+                <button type="submit" id="btn-submit-review" disabled class="w-full py-3 mt-4 bg-blue-600 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 dark:shadow-none transition">Verifikasi & Kirim</button>
             </form>
         </div>
     </div>
